@@ -1,0 +1,6 @@
+.idea/
+dist/
+*.sh
+vendor/
+old.txt
+new.txt
