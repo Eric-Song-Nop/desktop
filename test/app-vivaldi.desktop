@@ -1,0 +1,28 @@
+[Desktop Entry]
+Version=1.0
+Name=Vivaldi
+# Only KDE 4 seems to use GenericName, so we reuse the KDE strings.
+# From Ubuntu's language-pack-kde-XX-base packages, version 9.04-20090413.
+GenericName=Web Browser
+GenericName[zh_CN]=网页浏览器
+# Not translated in KDE, from Epiphany 2.26.1-0ubuntu1.
+Comment=Access the Internet
+Comment[zh_CN]=访问互联网
+Exec=/usr/bin/vivaldi-stable %U
+StartupNotify=true
+Terminal=false
+Icon=vivaldi
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=application/pdf;application/rdf+xml;application/rss+xml;application/xhtml+xml;application/xhtml_xml;application/xml;image/gif;image/jpeg;image/png;image/webp;text/html;text/xml;x-scheme-handler/ftp;x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/mailto;
+Actions=new-window;new-private-window;
+
+[Desktop Action new-window]
+Name=New Window
+Name[zh_CN]=新建窗口
+Exec=/usr/bin/vivaldi-stable --new-window
+
+[Desktop Action new-private-window]
+Name=New Private Window
+Name[zh_CN]=新建隐私窗口
+Exec=/usr/bin/vivaldi-stable --incognito

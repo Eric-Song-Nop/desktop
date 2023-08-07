@@ -13,7 +13,48 @@ type testData struct {
 }
 
 var testCases = []*testData{
-	{Filename: "app-alacritty.desktop", Entry: &Entry{Type: Application, Name: "Alacritty", GenericName: "Terminal", Comment: "A cross-platform, GPU enhanced terminal emulator", Icon: "Alacritty", Path: "/home/test", Exec: "alacritty"}},
+	{
+		Filename: "app-alacritty.desktop",
+		Entry: &Entry{
+			Type:    Application,
+			Actions: []string{"New"},
+			ActionEntries: []ActionEntry{
+				{
+					Name: "New Terminal",
+					Exec: "alacritty",
+				},
+			},
+			Name:        "Alacritty",
+			GenericName: "Terminal",
+			Comment:     "A cross-platform, GPU enhanced terminal emulator",
+			Icon:        "Alacritty",
+			Path:        "/home/test",
+			Exec:        "alacritty",
+		},
+	},
+	{
+		Filename: "app-vivaldi.desktop",
+		Entry: &Entry{
+			Type:        Application,
+			Name:        "Vivaldi",
+			GenericName: "Web Browser",
+			Comment:     "Access the Internet",
+			Exec:        "/usr/bin/vivaldi-stable %U",
+			Terminal:    false,
+			Icon:        "vivaldi",
+			Actions:     []string{"new-window", "new-private-window"},
+			ActionEntries: []ActionEntry{
+				{
+					Name: "New Window",
+					Exec: "/usr/bin/vivaldi-stable --new-window",
+				},
+				{
+					Name: "New Private Window",
+					Exec: "/usr/bin/vivaldi-stable --incognito",
+				},
+			},
+		},
+	},
 	{Filename: "app-vim.desktop", Entry: &Entry{Type: Application, Name: "Vim", GenericName: "Text Editor", Comment: "Edit text files", Icon: "gvim", Exec: "vim %F", Terminal: true}},
 	{Filename: "app-vim-nodisplay.desktop", Entry: nil},
 	{Filename: "link-google.desktop", Entry: &Entry{Type: Link, Name: "Link to Google", Icon: "text-html", URL: "https://google.com"}},
