@@ -1,3 +1,3 @@
-module code.rocketnine.space/tslocum/desktop
+module github.com/eric-song-nop/desktop
 
 go 1.18
