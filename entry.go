@@ -40,6 +40,8 @@ func (t EntryType) String() string {
 
 var (
 	entryHeader      = []byte("[desktop entry]")
+	actionHeader     = []byte("[desktop action")
+	entryActions     = []byte("actions=")
 	entryType        = []byte("type=")
 	entryName        = []byte("name=")
 	entryGenericName = []byte("genericname=")
@@ -92,6 +94,19 @@ type Entry struct {
 
 	// Terminal controls whether to run in a terminal.
 	Terminal bool
+
+	// The actions terms of main desktop entry.
+	Actions []string
+
+	// The real actions of the desktop entry file.
+	ActionEntries []ActionEntry
+}
+
+// Each action represents a parsed desktop entry action.
+type ActionEntry struct {
+	Name string
+	Icon string
+	Exec string
 }
 
 // ExpandExec fills keywords in the provided entry's Exec with user arguments.
@@ -122,7 +137,10 @@ func Parse(content io.Reader, buf []byte) (*Entry, error) {
 		scannedBytesLen int
 
 		entry       Entry
-		foundHeader bool
+		foundHeader bool = false
+
+		// Count which action we are at, 0 for not any action, 1 for first action
+		action bool = false
 	)
 
 	scanner.Buffer(buf, len(buf))
@@ -140,7 +158,8 @@ func Parse(content io.Reader, buf []byte) (*Entry, error) {
 
 				foundHeader = true
 			} else {
-				break // Start of new section
+				action = true
+				entry.ActionEntries = append(entry.ActionEntries, ActionEntry{})
 			}
 		} else if scannedBytesLen >= 6 && bytes.EqualFold(scannedBytes[0:5], entryType) {
 			t := strings.ToLower(string(scannedBytes[5:]))
@@ -153,17 +172,35 @@ func Parse(content io.Reader, buf []byte) (*Entry, error) {
 				entry.Type = Directory
 			}
 		} else if scannedBytesLen >= 6 && bytes.EqualFold(scannedBytes[0:5], entryName) {
-			entry.Name = string(scannedBytes[5:])
+			name := string(scannedBytes[5:])
+			if !action {
+				entry.Name = name
+			} else {
+				entry.ActionEntries[len(entry.ActionEntries)-1].Name = name
+			}
 		} else if scannedBytesLen >= 13 && bytes.EqualFold(scannedBytes[0:12], entryGenericName) {
 			entry.GenericName = string(scannedBytes[12:])
+		} else if scannedBytesLen >= 9 && bytes.EqualFold(scannedBytes[0:8], entryActions) {
+			entry.Actions = strings.Split(string(scannedBytes[8:]), ";")
+			entry.Actions = entry.Actions[:len(entry.Actions)-1]
 		} else if scannedBytesLen >= 9 && bytes.EqualFold(scannedBytes[0:8], entryComment) {
 			entry.Comment = string(scannedBytes[8:])
 		} else if scannedBytesLen >= 6 && bytes.EqualFold(scannedBytes[0:5], entryIcon) {
-			entry.Icon = string(scannedBytes[5:])
+			icon := string(scannedBytes[5:])
+			if !action {
+				entry.Icon = icon
+			} else {
+				entry.ActionEntries[len(entry.ActionEntries)-1].Icon = icon
+			}
 		} else if scannedBytesLen >= 6 && bytes.EqualFold(scannedBytes[0:5], entryPath) {
 			entry.Path = string(scannedBytes[5:])
 		} else if scannedBytesLen >= 6 && bytes.EqualFold(scannedBytes[0:5], entryExec) {
-			entry.Exec = unquoteExec(string(scannedBytes[5:]))
+			exec := string(scannedBytes[5:])
+			if !action {
+				entry.Exec = exec
+			} else {
+				entry.ActionEntries[len(entry.ActionEntries)-1].Exec = exec
+			}
 		} else if scannedBytesLen >= 5 && bytes.EqualFold(scannedBytes[0:4], entryURL) {
 			entry.URL = string(scannedBytes[4:])
 		} else if scannedBytesLen == 13 && bytes.EqualFold(scannedBytes, entryTerminal) {
