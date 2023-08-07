@@ -1,4 +1,7 @@
 # desktop
+
+**WARNING:** This is a hard fork of [tslocum's desktop](https://code.rocket9labs.com/tslocum/desktop) library to support 1.1 version of freedesktop desktop entry standard. Many stuffs has not been modified including the original LICENSE, docs and etc.
+
 [![GoDoc](https://code.rocketnine.space/tslocum/godoc-static/raw/branch/master/badge.svg)](https://docs.rocketnine.space/code.rocketnine.space/tslocum/desktop)
 [![Donate](https://img.shields.io/liberapay/receives/rocketnine.space.svg?logo=liberapay)](https://liberapay.com/rocketnine.space)
 
@@ -13,4 +16,3 @@ Documentation is available via [gdooc](https://docs.rocketnine.space/code.rocket
 ## Support
 
 Please share issues and suggestions [here](https://code.rocketnine.space/tslocum/desktop/issues).
-
